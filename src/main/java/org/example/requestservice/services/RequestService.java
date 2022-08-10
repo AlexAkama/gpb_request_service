@@ -4,34 +4,32 @@ import org.example.requestservice.dto.AppResponse;
 import org.example.requestservice.dto.DeleteResponse;
 import org.example.requestservice.dto.RequestDto;
 import org.example.requestservice.dto.RequestRequest;
-import org.example.requestservice.exceptions.BadRequestException;
-import org.example.requestservice.exceptions.NotFoundException;
 import org.example.requestservice.model.Request;
 
 import java.util.List;
 
 public interface RequestService {
 
-    RequestDto addRequest(RequestRequest request) throws BadRequestException;
+    RequestDto addRequest(RequestRequest request);
 
-    RequestDto getRequest(Long requestId) throws NotFoundException;
+    RequestDto getRequest(Long requestId);
 
-    DeleteResponse removeRequest(Long requestId) throws NotFoundException;
+    DeleteResponse removeRequest(Long requestId);
 
     List<RequestDto> getRequestList();
 
-    AppResponse addTagToRequest(Long tagId, Long requestId) throws NotFoundException, BadRequestException;
+    AppResponse addTagToRequest(Long tagId, Long requestId);
 
-    AppResponse removeTagFromRequest(Long tagId, Long requestId) throws NotFoundException, BadRequestException;
+    AppResponse removeTagFromRequest(Long tagId, Long requestId);
 
-    List<RequestDto> getRequestListByTag(Long tagId) throws NotFoundException;
+    List<RequestDto> getRequestListByTag(Long tagId);
 
-    AppResponse removeRequestFromFolder(Long requestId, Long folderId) throws NotFoundException, BadRequestException;
+    AppResponse removeRequestFromFolder(Long requestId, Long folderId);
 
-    AppResponse addRequestToFolder(Long requestId, Long folderId) throws NotFoundException, BadRequestException;
+    AppResponse addRequestToFolder(Long requestId, Long folderId);
 
-    List<RequestDto> getRequestListByFolder(Long folderId) throws NotFoundException;
+    List<RequestDto> getRequestListByFolder(Long folderId);
 
-    Request getRequestById(Long requestId) throws NotFoundException;
+    Request getRequestById(Long requestId);
 
 }

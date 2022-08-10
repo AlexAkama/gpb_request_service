@@ -28,7 +28,7 @@ public class FolderServiceImpl implements FolderService {
     private int folderNameLimit;
 
     @Override
-    public FolderDto addFolder(FolderRequest folderRequest) throws BadRequestException {
+    public FolderDto addFolder(FolderRequest folderRequest) {
         validateRequest(folderRequest);
         Folder folder = new Folder();
         folder.setName(folderRequest.getName());
@@ -38,14 +38,14 @@ public class FolderServiceImpl implements FolderService {
     }
 
     @Override
-    public FolderDto getFolder(Long folderId) throws NotFoundException {
+    public FolderDto getFolder(Long folderId) {
         Folder folder = getFolderById(folderId);
         LOGGER.info("Получена папка: " + folder.getInfo());
         return new FolderDto(folder);
     }
 
     @Override
-    public DeleteResponse removeFolder(Long folderId) throws NotFoundException, BadRequestException {
+    public DeleteResponse removeFolder(Long folderId) {
         Folder folder = getFolderById(folderId);
         if (!folder.getRequests().isEmpty()) {
             String error = String.format("Папку id=%d удалить нельзя - прикреплены запросы", folderId);
@@ -68,7 +68,7 @@ public class FolderServiceImpl implements FolderService {
     }
 
     @Override
-    public Folder getFolderById(Long folderId) throws NotFoundException {
+    public Folder getFolderById(Long folderId) {
         Optional<Folder> optionalFolder = folderRepo.findById(folderId);
         if (optionalFolder.isEmpty()) {
             LOGGER.error(String.format("Папка id=%d не найдена", folderId));
@@ -82,7 +82,7 @@ public class FolderServiceImpl implements FolderService {
         folderRepo.save(folder);
     }
 
-    private void validateRequest(FolderRequest folderRequest) throws BadRequestException {
+    private void validateRequest(FolderRequest folderRequest) {
         String error = null;
         if (folderRequest == null || folderRequest.getName() == null || folderRequest.getName().isBlank()) {
             error = "Не указано имя папки";

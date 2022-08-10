@@ -27,7 +27,7 @@ public class TagServiceImpl implements TagService {
     private int tagLengthLimit;
 
     @Override
-    public TagDto addTag(TagRequest tagRequest) throws BadRequestException {
+    public TagDto addTag(TagRequest tagRequest) {
         validateRequest(tagRequest);
         Tag tag = new Tag();
         tag.setName(tagRequest.getName());
@@ -37,14 +37,14 @@ public class TagServiceImpl implements TagService {
     }
 
     @Override
-    public TagDto getTag(Long tagId) throws NotFoundException {
+    public TagDto getTag(Long tagId) {
         Tag tag = getTagById(tagId);
         LOGGER.info("Получен тег: " + tag.getInfo());
         return new TagDto(tag);
     }
 
     @Override
-    public DeleteResponse removeTag(Long tagId) throws NotFoundException, BadRequestException {
+    public DeleteResponse removeTag(Long tagId) {
         Tag tag = getTagById(tagId);
         if (tagRepo.hasRequestToTag(tagId)) {
             String error = String.format("Тег id=%d удалить нельзя - прикреплены запросы", tagId);
@@ -67,7 +67,7 @@ public class TagServiceImpl implements TagService {
     }
 
     @Override
-    public Tag getTagById(Long tagId) throws NotFoundException {
+    public Tag getTagById(Long tagId) {
         Optional<Tag> optionalTag = tagRepo.findById(tagId);
         if (optionalTag.isEmpty()) {
             LOGGER.error(String.format("Тег id=%d не найден", tagId));
@@ -76,7 +76,7 @@ public class TagServiceImpl implements TagService {
         return optionalTag.get();
     }
 
-    private void validateRequest(TagRequest tagRequest) throws BadRequestException {
+    private void validateRequest(TagRequest tagRequest) {
         String error = null;
         if (tagRequest == null || tagRequest.getName() == null || tagRequest.getName().isBlank()) {
             error = "Не указано имя тега";

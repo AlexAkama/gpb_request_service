@@ -45,7 +45,7 @@ public class FolderController {
     @PostMapping()
     public ResponseEntity<FolderDto> addFolder(
             @RequestBody FolderRequest request
-    ) throws BadRequestException {
+    ) {
         LOGGER.info("Запрос на добавление папки");
         return ResponseEntity.ok(folderService.addFolder(request));
     }
@@ -60,7 +60,7 @@ public class FolderController {
     @GetMapping("/{id}")
     public ResponseEntity<FolderDto> getFolder(
             @PathVariable Long id
-    ) throws NotFoundException {
+    ) {
         LOGGER.info("Запрос на получение папки id=" + id);
         return ResponseEntity.ok(folderService.getFolder(id));
     }
@@ -79,7 +79,7 @@ public class FolderController {
     @DeleteMapping("/{id}")
     public ResponseEntity<DeleteResponse> deleteFolder(
             @PathVariable Long id
-    ) throws NotFoundException, BadRequestException {
+    ) {
         LOGGER.info("Запрос на удаление папки id=" + id);
         return ResponseEntity.ok(folderService.removeFolder(id));
     }

@@ -40,7 +40,7 @@ public class RequestServiceImpl implements RequestService {
     private int tagLimit;
 
     @Override
-    public RequestDto addRequest(RequestRequest requestRequest) throws BadRequestException {
+    public RequestDto addRequest(RequestRequest requestRequest) {
         validateRequest(requestRequest);
         Request requestEntity = new Request(requestRequest.getText());
         requestRepo.saveAndFlush(requestEntity);
@@ -49,7 +49,7 @@ public class RequestServiceImpl implements RequestService {
     }
 
     @Override
-    public RequestDto getRequest(Long requestId) throws NotFoundException {
+    public RequestDto getRequest(Long requestId) {
         Request request = getRequestById(requestId);
         LOGGER.info("Получен запрос: " + request.getInfo());
         return new RequestDto(request);
@@ -57,7 +57,7 @@ public class RequestServiceImpl implements RequestService {
 
     @Transactional
     @Override
-    public DeleteResponse removeRequest(Long requestId) throws NotFoundException {
+    public DeleteResponse removeRequest(Long requestId) {
         Request request = getRequestById(requestId);
         if (request.getFolder() != null) {
             Folder folder = request.getFolder();
@@ -77,7 +77,7 @@ public class RequestServiceImpl implements RequestService {
     }
 
     @Override
-    public AppResponse addTagToRequest(Long tagId, Long requestId) throws NotFoundException, BadRequestException {
+    public AppResponse addTagToRequest(Long tagId, Long requestId) {
         Request request = getRequestById(requestId);
         Set<Tag> tags = request.getTags();
         String error;
@@ -101,7 +101,7 @@ public class RequestServiceImpl implements RequestService {
 
     @Transactional
     @Override
-    public AppResponse removeTagFromRequest(Long tagId, Long requestId) throws NotFoundException, BadRequestException {
+    public AppResponse removeTagFromRequest(Long tagId, Long requestId) {
         Request request = getRequestById(requestId);
         Set<Tag> tags = request.getTags();
         Tag tag = tagService.getTagById(tagId);
@@ -118,7 +118,7 @@ public class RequestServiceImpl implements RequestService {
     }
 
     @Override
-    public List<RequestDto> getRequestListByTag(Long tagId) throws NotFoundException {
+    public List<RequestDto> getRequestListByTag(Long tagId) {
         tagService.getTagById(tagId);
         List<RequestDto> list = requestRepo.getRequestListByTag(tagId).stream().map(RequestDto::new).collect(Collectors.toList());
         LOGGER.info(String.format("Получен список запросов по тегу(id=%d): size=%d", tagId, list.size()));
@@ -127,7 +127,7 @@ public class RequestServiceImpl implements RequestService {
 
     @Transactional
     @Override
-    public AppResponse addRequestToFolder(Long requestId, Long folderId) throws NotFoundException, BadRequestException {
+    public AppResponse addRequestToFolder(Long requestId, Long folderId) {
         Folder folder = folderService.getFolderById(folderId);
         Request request = getRequestById(requestId);
         updateRequestFolder(request, folder);
@@ -140,7 +140,7 @@ public class RequestServiceImpl implements RequestService {
 
     @Transactional
     @Override
-    public AppResponse removeRequestFromFolder(Long requestId, Long folderId) throws NotFoundException, BadRequestException {
+    public AppResponse removeRequestFromFolder(Long requestId, Long folderId) {
         Folder folder = folderService.getFolderById(folderId);
         Request request = getRequestById(requestId);
         Set<Request> requests = folder.getRequests();
@@ -159,7 +159,7 @@ public class RequestServiceImpl implements RequestService {
     }
 
     @Override
-    public List<RequestDto> getRequestListByFolder(Long folderId) throws NotFoundException {
+    public List<RequestDto> getRequestListByFolder(Long folderId) {
         Folder folder = folderService.getFolderById(folderId);
         List<RequestDto> list = folder.getRequests().stream().map(RequestDto::new).collect(Collectors.toList());
         LOGGER.info(String.format("Получен список запросов по папке(id=%d): size=%d", folderId, list.size()));
@@ -167,7 +167,7 @@ public class RequestServiceImpl implements RequestService {
     }
 
     @Override
-    public Request getRequestById(Long requestId) throws NotFoundException {
+    public Request getRequestById(Long requestId) {
         Optional<Request> optionalRequest = requestRepo.findById(requestId);
         if (optionalRequest.isEmpty()) {
             LOGGER.error(String.format("Запрос id=%d не найден", requestId));
@@ -176,7 +176,7 @@ public class RequestServiceImpl implements RequestService {
         return optionalRequest.get();
     }
 
-    private void updateRequestFolder(Request request, Folder newFolder) throws BadRequestException {
+    private void updateRequestFolder(Request request, Folder newFolder) {
         if (request.getFolder() != null) {
             Folder oldFolder = request.getFolder();
             if (oldFolder.getId().longValue() == newFolder.getId().longValue()) {
@@ -192,7 +192,7 @@ public class RequestServiceImpl implements RequestService {
         request.setFolder(newFolder);
     }
 
-    private void validateRequest(RequestRequest requestRequest) throws BadRequestException {
+    private void validateRequest(RequestRequest requestRequest) {
         String error = null;
         if (requestRequest == null || requestRequest.getText() == null || requestRequest.getText().isBlank()) {
             error = "Отсутствует текст запроса";
