@@ -14,4 +14,8 @@ public class Tag extends AbstractEntity {
 
     private String name;
 
+    public String getInfo() {
+        return "id=" + getId() + ", name='" + name + "'";
+    }
+
 }

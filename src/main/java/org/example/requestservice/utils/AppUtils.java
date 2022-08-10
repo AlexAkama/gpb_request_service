@@ -1,7 +1,5 @@
 package org.example.requestservice.utils;
 
-import org.springframework.http.ResponseEntity;
-
 public final class AppUtils {
 
     private AppUtils() {
@@ -14,15 +12,17 @@ public final class AppUtils {
         } else if (size == null) {
             size = defaultPageSize;
         }
-        if (page < 1) page = 1L;
-        if (size < 1) size = defaultPageSize;
+        if (page < 1) {
+            page = 1L;
+        }
+        if (size < 1) {
+            size = defaultPageSize;
+        }
         long pages = Math.round(Math.ceil(1.0 * total / size));
-        if (page > pages) page = pages;
+        if (page > pages) {
+            page = pages;
+        }
         return new PageAndSizePair(page.intValue() - 1, size.intValue());
-    }
-
-    public static <T> ResponseEntity<T> getOkResponse(T body) {
-        return ResponseEntity.ok(body);
     }
 
 }

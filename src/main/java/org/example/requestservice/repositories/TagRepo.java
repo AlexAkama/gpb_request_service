@@ -9,7 +9,7 @@ public interface TagRepo extends JpaRepository<Tag, Long> {
     boolean existsByName(String name);
 
     @Query(nativeQuery = true,
-            value = "SELECT EXISTS (SELECT * FROM gpb.public.tag_to_request WHERE tag_id = ?1)")
+            value = "SELECT EXISTS (SELECT * FROM tag_to_request WHERE tag_id = ?1)")
     boolean hasRequestToTag(Long tagId);
 
 }

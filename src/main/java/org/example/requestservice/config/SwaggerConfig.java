@@ -18,7 +18,7 @@ public class SwaggerConfig {
                         .contact(
                                 new Contact()
                                         .email("gremcox@bk.ru")
-                                        .url("https://github.com/AlexAkama")
+                                        .url("https://github.com/AlexAkama/gpb_request_service")
                                         .name("Алексей Маслов")
                         )
                 );

@@ -8,6 +8,7 @@ import io.swagger.v3.oas.annotations.responses.ApiResponse;
 import io.swagger.v3.oas.annotations.responses.ApiResponses;
 import io.swagger.v3.oas.annotations.tags.Tag;
 import lombok.RequiredArgsConstructor;
+import org.apache.log4j.Logger;
 import org.example.requestservice.dto.DeleteResponse;
 import org.example.requestservice.dto.FolderDto;
 import org.example.requestservice.dto.FolderRequest;
@@ -21,14 +22,17 @@ import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestBody;
+import org.springframework.web.bind.annotation.RequestMapping;
 
 import java.util.List;
 
 @Tag(name = "FOLDER Controller", description = "Управление папками")
 @Controller
 @RequiredArgsConstructor
-public class FolderController extends BaseController {
+@RequestMapping("/folders")
+public class FolderController {
 
+    private static final Logger LOGGER = Logger.getLogger(FolderController.class);
     private final FolderService folderService;
 
     @Operation(summary = "Добавление папки")
@@ -38,11 +42,12 @@ public class FolderController extends BaseController {
                     @Content(array = @ArraySchema(schema = @Schema(implementation = BadRequestException.class)))
             })
     })
-    @PostMapping("/folder")
+    @PostMapping()
     public ResponseEntity<FolderDto> addFolder(
             @RequestBody FolderRequest request
     ) throws BadRequestException {
-        return folderService.addFolder(request);
+        LOGGER.info("Запрос на добавление папки");
+        return ResponseEntity.ok(folderService.addFolder(request));
     }
 
     @Operation(summary = "Получение папки")
@@ -52,15 +57,16 @@ public class FolderController extends BaseController {
                     @Content(array = @ArraySchema(schema = @Schema(implementation = NotFoundException.class)))
             })
     })
-    @GetMapping("/folder/{id}")
+    @GetMapping("/{id}")
     public ResponseEntity<FolderDto> getFolder(
             @PathVariable Long id
     ) throws NotFoundException {
-        return folderService.getFolder(id);
+        LOGGER.info("Запрос на получение папки id=" + id);
+        return ResponseEntity.ok(folderService.getFolder(id));
     }
 
     @Operation(summary = "Удаление папки",
-    description = "Папку нельзя удалить если есть прикрепленные к ней запросы")
+            description = "Папку нельзя удалить если есть прикрепленные к ней запросы")
     @ApiResponses(value = {
             @ApiResponse(responseCode = "200", description = "Папка удалена успешно"),
             @ApiResponse(responseCode = "400", description = "Не верный запрос, либо папку нельзя удалить", content = {
@@ -70,18 +76,20 @@ public class FolderController extends BaseController {
                     @Content(array = @ArraySchema(schema = @Schema(implementation = NotFoundException.class)))
             })
     })
-    @DeleteMapping("/folder/{id}")
+    @DeleteMapping("/{id}")
     public ResponseEntity<DeleteResponse> deleteFolder(
             @PathVariable Long id
     ) throws NotFoundException, BadRequestException {
-        return folderService.removeFolder(id);
+        LOGGER.info("Запрос на удаление папки id=" + id);
+        return ResponseEntity.ok(folderService.removeFolder(id));
     }
 
     @Operation(summary = "Получение списка папок")
     @ApiResponse(responseCode = "200", description = "Список папок получен")
-    @GetMapping("/folders")
+    @GetMapping()
     public ResponseEntity<List<FolderDto>> getFolderList() {
-        return folderService.getFolderList();
+        LOGGER.info("Запрос на получения списка папок");
+        return ResponseEntity.ok(folderService.getFolderList());
     }
 
 }

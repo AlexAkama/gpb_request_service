@@ -24,4 +24,8 @@ public class Folder extends AbstractEntity {
     )
     private Set<Request> requests;
 
+    public String getInfo() {
+        return "id=" + getId() + ", name='" + name + "'";
+    }
+
 }

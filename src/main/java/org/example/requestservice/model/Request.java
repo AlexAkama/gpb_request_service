@@ -36,4 +36,8 @@ public class Request extends AbstractEntity {
         length = text.length();
     }
 
+    public String getInfo() {
+        return "id=" + getId() + ", text='" + text.substring(0, 10) + ((text.length() > 10) ? "...'" : "'");
+    }
+
 }
