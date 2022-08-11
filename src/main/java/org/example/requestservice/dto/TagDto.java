@@ -6,6 +6,8 @@ import lombok.Getter;
 import lombok.NoArgsConstructor;
 import org.example.requestservice.model.Tag;
 
+import java.util.Objects;
+
 @Schema(description = "Объект данных тега")
 @Getter
 @NoArgsConstructor
@@ -21,6 +23,19 @@ public class TagDto {
     public TagDto(Tag tag) {
         id = tag.getId();
         name = tag.getName();
+    }
+
+    @Override
+    public boolean equals(Object o) {
+        if (this == o) return true;
+        if (o == null || getClass() != o.getClass()) return false;
+        TagDto tagDto = (TagDto) o;
+        return id == tagDto.id && name.equals(tagDto.name);
+    }
+
+    @Override
+    public int hashCode() {
+        return Objects.hash(id);
     }
 
 }

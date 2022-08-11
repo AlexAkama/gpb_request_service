@@ -31,7 +31,7 @@ public class TagServiceImpl implements TagService {
         validateRequest(tagRequest);
         Tag tag = new Tag();
         tag.setName(tagRequest.getName());
-        tagRepo.saveAndFlush(tag);
+        tag = tagRepo.saveAndFlush(tag);
         LOGGER.info("Добавлен тег: " + tag.getInfo());
         return new TagDto(tag);
     }
