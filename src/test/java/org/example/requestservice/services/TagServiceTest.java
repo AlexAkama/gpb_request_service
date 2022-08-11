@@ -10,8 +10,10 @@ import org.example.requestservice.model.Tag;
 import org.example.requestservice.repositories.TagRepo;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
+import org.junit.jupiter.params.ParameterizedTest;
+import org.junit.jupiter.params.provider.NullAndEmptySource;
+import org.junit.jupiter.params.provider.ValueSource;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.beans.factory.annotation.Value;
 import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.test.context.ContextConfiguration;
 import org.springframework.test.context.TestPropertySource;
@@ -40,34 +42,12 @@ class TagServiceTest {
     @Autowired
     private TagServiceImpl tagService;
 
-    @Value("${tag.length.limit}")
-    private int tagLengthLimit;
-
-    @Test
-    void addTag_noRequest() {
-        assertThrows(BadRequestException.class, () -> tagService.addTag(null));
-    }
-
-    @Test
-    void addTag_emptyRequest() {
+    @ParameterizedTest
+    @ValueSource(strings = {"  ", "name is greater than the limit"})
+    @NullAndEmptySource
+    void addTag_validateRequest(String name) {
         TagRequest tagRequest = new TagRequest();
-
-        assertThrows(BadRequestException.class, () -> tagService.addTag(tagRequest));
-    }
-
-    @Test
-    void addTag_blankName() {
-        TagRequest tagRequest = new TagRequest();
-        tagRequest.setName("   ");
-
-        assertThrows(BadRequestException.class, () -> tagService.addTag(tagRequest));
-    }
-
-    @Test
-    void addTag_nameLengthOverLimit() {
-        TagRequest tagRequest = new TagRequest();
-        tagRequest.setName("a".repeat(tagLengthLimit + 1));
-
+        tagRequest.setName(name);
         assertThrows(BadRequestException.class, () -> tagService.addTag(tagRequest));
     }
 
