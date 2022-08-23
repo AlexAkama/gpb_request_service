@@ -8,6 +8,7 @@ import io.swagger.v3.oas.annotations.responses.ApiResponse;
 import io.swagger.v3.oas.annotations.responses.ApiResponses;
 import io.swagger.v3.oas.annotations.tags.Tag;
 import lombok.RequiredArgsConstructor;
+import lombok.extern.slf4j.Slf4j;
 import org.apache.log4j.Logger;
 import org.example.requestservice.dto.DeleteResponse;
 import org.example.requestservice.dto.FolderDto;
@@ -26,13 +27,18 @@ import org.springframework.web.bind.annotation.RequestMapping;
 
 import java.util.List;
 
+@Slf4j
 @Tag(name = "FOLDER Controller", description = "Управление папками")
 @Controller
 @RequiredArgsConstructor
 @RequestMapping("/folders")
 public class FolderController {
 
-    private static final Logger LOGGER = Logger.getLogger(FolderController.class);
+    /**
+     * Есть более красивый вариант логирования.
+     * К проекту уже подключен Lombok, который содержит Slf4j.
+     */
+//     private static final Logger LOGGER = Logger.getLogger(FolderController.class);
     private final FolderService folderService;
 
     @Operation(summary = "Добавление папки")
@@ -46,7 +52,8 @@ public class FolderController {
     public ResponseEntity<FolderDto> addFolder(
             @RequestBody FolderRequest request
     ) {
-        LOGGER.info("Запрос на добавление папки");
+//         LOGGER.info("Запрос на добавление папки");
+        log.info("Запрос на добавление папки - [{}]", request);
         return ResponseEntity.ok(folderService.addFolder(request));
     }
 
@@ -61,7 +68,8 @@ public class FolderController {
     public ResponseEntity<FolderDto> getFolder(
             @PathVariable Long id
     ) {
-        LOGGER.info("Запрос на получение папки id=" + id);
+//         LOGGER.info("Запрос на получение папки id=" + id);
+        log.info("Запрос на получение папки - {}", id);
         return ResponseEntity.ok(folderService.getFolder(id));
     }
 
@@ -80,7 +88,8 @@ public class FolderController {
     public ResponseEntity<DeleteResponse> deleteFolder(
             @PathVariable Long id
     ) {
-        LOGGER.info("Запрос на удаление папки id=" + id);
+//         LOGGER.info("Запрос на удаление папки id=" + id);
+        log.info("Запрос на удаление папки - {}", id);
         return ResponseEntity.ok(folderService.removeFolder(id));
     }
 
@@ -88,7 +97,8 @@ public class FolderController {
     @ApiResponse(responseCode = "200", description = "Список папок получен")
     @GetMapping()
     public ResponseEntity<List<FolderDto>> getFolderList() {
-        LOGGER.info("Запрос на получения списка папок");
+//         LOGGER.info("Запрос на получения списка папок");
+        log.info("Запрос на получения списка папок");
         return ResponseEntity.ok(folderService.getFolderList());
     }
 
